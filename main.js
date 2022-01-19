@@ -28,7 +28,6 @@
             this.ArrayIndex;
             this.elementItem;
 
-
             /* Functions */
             const RandomNumber = () => {
                 this.number = parseInt(Math.random(0, 20) * 10 * 2);
@@ -95,15 +94,16 @@
                 this.scoreDisplay.innerText = `Score:${this.Result}/${fonts.length}`;
                 this.time = 20;
                 this.timeDisplay.innerText = `Temps restant pour cette carte:00:${this.time}`;
+                if (this.round > 0 || this.round < 19) {
+                    this.elementItem = document.querySelector('.app__item');
+                    console.log(this.elementItem);
+                    this.elementItem.remove();
+                }
                 this.round++;
                 return this.Result;
             }
 
             const SetVignette = () => {
-                if (this.round !== 0) {
-                    this.elementItem = document.querySelector('.app__item');
-                    /* this.elementItem.remove() */
-                }
                 this.AppItem.insertAdjacentHTML("beforeend", this.ListFonts[this.ListFonts.length - 1]);
                 this.IntervalId = setInterval(() => {
                     this.time--;
@@ -113,7 +113,6 @@
                         VerifResponse();
                         SetVignette();
                     }
-
                 }, 1000);
             }
             const ENDGAME = () => {
@@ -137,6 +136,8 @@
 
             }
 
+
+            /* Code */
 
             StartGame();
 
