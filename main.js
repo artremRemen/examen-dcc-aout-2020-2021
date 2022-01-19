@@ -5,7 +5,6 @@
 (function() {
     const Tymper = {
         init() {
-            console.log(fonts);
             this.FontsList = document.querySelectorAll('option');
             this.AppItem = document.querySelector('.app');
             this.scoreDisplay = document.querySelector(".information__score");
@@ -13,71 +12,128 @@
             this.submitButton = document.querySelector('[value="Valider"]');
             this.FamillyInput = document.querySelector('[list="families"]');
             this.NameInput = document.querySelector('[list="fonts"]');
+            this.Wrong = document.querySelector('.wrong-cards');
             this.bodyElement = document.querySelector('body');
+            this.DatalistFonts = document.querySelector('#fonts');
             this.score = 0;
             this.time = 20;
             this.number;
             this.NumberUsed = [];
+            this.ListFonts = [];
             this.Response = 0;
             this.Result = 0;
-
+            this.round = 0;
+            this.ArrayIndex;
             /* Functions */
             const RandomNumber = () => {
                 this.number = parseInt(Math.random(0, 20) * 10 * 2);
-                console.log(this.number);
-                this.AppItem.innerHTML = `<li data-font-name="${fonts[this.number].name}" data-family="${fonts[this.number].family}" class='app__item'>
+                if (this.NumberUsed.indexOf(this.number)) {
+
+
+                } else {
+                    this.NumberUsed.push(this.number);
+                    return this.number;
+                }
+            }
+
+            const StartGame = () => {
+                for (let i = 0; i < fonts.length; i++) {
+                    RandomNumber();
+
+                    this.DatalistFonts.insertAdjacentHTML('beforeend', `<option value="${fonts[this.number].name}"></option>`);
+
+                    this.ListFonts.push(`<li data-font-name="${fonts[this.number].name}" data-family="${fonts[this.number].family}" class='app__item'>
                 <div class="app__item__info"><span class="app__item__info__name">nom</span>
                   <span class="app__item__info__info">famille - auteur</span>
                 </div>
                 <img class='app__item__font' src='./assets/fonts/${fonts[this.number].file}.svg' alt='Aa, abcdefghijklmnopqrstuvwxyz, ABCDEFGHIJKLMNOPQRSTUVWXYZ'>
-                </li>`;
-                return this.number;
+                </li>`);
+                }
+            }
+
+            const AddClass = (Class1, Class2, ArrayIndex) => {
+
+                if (Class2 === ' ') {
+                    this.AppItem.children[0].classList.add(Class1);
+                } else {
+                    this.AppItem.children[0].classList.add(Class1, Class2);
+                }
             }
 
             const VerifResponse = () => {
-                if (this.NameInput.value === fonts[this.number].name) {
+                this.ArrayIndex = this.ListFonts.length - 1;
+                if (this.NameInput.value === fonts[this.ArrayIndex].name) {
                     this.Response++;
                 }
-                if (this.FamillyInput.value === fonts[this.number].family) {
+                if (this.FamillyInput.value === fonts[this.ArrayIndex].family) {
 
                     this.Response++;
                 }
+                this.Response = 2
                 if (this.Response === 1) {
                     this.Result = this.Result + 0.5;
+                    AddClass('app__item--move', ' ', this.ArrayIndex);
+                    this.Wrong.insertAdjacentHTML('beforeend', this.ListFonts[this.ArrayIndex]);
+                    this.ListFonts.pop();
+                    console.log(this.ListFonts.length);
                 }
                 if (this.Response === 2) {
                     this.Result = this.Result + 1;
+                    AddClass('app__item--move', 'app__item--move--success', this.ArrayIndex);
+                    this.ListFonts.pop();
+                    console.log(this.ListFonts.length);
+                } else {
+                    AddClass('app__item--move', ' ', this.ArrayIndex);
+                    this.Wrong.insertAdjacentHTML('beforeend', this.ListFonts[this.ArrayIndex]);
+                    this.ListFonts.pop();
+                    console.log(this.ListFonts.length);
+
                 }
+                clearInterval(this.IntervalId);
+                this.scoreDisplay.innerText = `Score:${this.Result}/${fonts.length}`;
+                this.time = 20;
+                this.timeDisplay.innerText = `Temps restant pour cette carte:00:${this.time}`;
                 return this.Result;
             }
 
+            const SetVignette = () => {
+                console.log(this.ListFonts.length - 1);
+                this.AppItem.insertAdjacentHTML("beforeend", this.ListFonts[this.ListFonts.length - 1]);
+                this.IntervalId = setInterval((e) => {
+                    this.time--;
+                    this.timeDisplay.innerText = `Temps restant pour cette carte:00:${this.time}`;
+                    if (this.time === 0) {
+                        clearInterval(this.IntervalId);
+                        VerifResponse();
+                    }
+                }, 1000);
+            }
 
-            this.number = RandomNumber();
+
+            StartGame();
+
+            SetVignette();
 
             this.timeDisplay.innerText = `Temps restant pour cette carte:00:${this.time}`;
-            this.scoreDisplay.innerText = `Score:${this.Result}`;
-
-            this.IntervalId = setInterval((e) => {
-                this.time--;
-                this.timeDisplay.innerText = `Temps restant pour cette carte:00:${this.time}`;
-                if (this.time === 0) {
-                    clearInterval(this.IntervalId);
-                }
-            }, 1000);
+            this.scoreDisplay.innerText = `Score:${this.Result}/${fonts.length}`;
 
             this.bodyElement.addEventListener('keypress', (e) => {
                 if (e.code === 'Enter') {
                     e.preventDefault();
                     VerifResponse();
-                    this.number = RandomNumber();
-                    this.scoreDisplay.innerText = `Score:${this.Result}`;
+                    if (this.round > 20) {
+                        this.scoreDisplay.innerText = `Score:${this.Result}/${fonts.length}`;
+                    }
                 }
             })
             this.submitButton.addEventListener('click', (e) => {
                 e.preventDefault();
                 VerifResponse();
-                this.number = RandomNumber();
-                this.scoreDisplay.innerText = `Score:${this.Result}`;
+                if (this.round > 20) {
+                    this.scoreDisplay.innerText = `Score:${this.Result}`;
+                } else {
+                    console.log('EndGame');
+                }
             })
         }
     }
