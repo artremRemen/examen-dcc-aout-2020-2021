@@ -15,7 +15,8 @@
             this.Wrong = document.querySelector('.wrong-cards');
             this.bodyElement = document.querySelector('body');
             this.DatalistFonts = document.querySelector('#fonts');
-            this.PlayAgainButton = document.querySelector('#play-again');
+            this.PlayAgainForm = document.querySelector('#play-again');
+            this.PlayAgainButton = document.querySelector('.play__item--submit');
             this.score = 0;
             this.time = 20;
             this.number;
@@ -23,7 +24,7 @@
             this.ListFonts = [];
             this.Response = 0;
             this.Result = 0;
-            this.round = 0;
+            this.round = 20;
             this.ArrayIndex;
             this.elementItem;
 
@@ -99,10 +100,9 @@
             }
 
             const SetVignette = () => {
-                console.log(this.ListFonts.length - 1);
                 if (this.round !== 0) {
                     this.elementItem = document.querySelector('.app__item');
-                    this.elementItem.remove()
+                    /* this.elementItem.remove() */
                 }
                 this.AppItem.insertAdjacentHTML("beforeend", this.ListFonts[this.ListFonts.length - 1]);
                 this.IntervalId = setInterval(() => {
@@ -117,7 +117,7 @@
                 }, 1000);
             }
             const ENDGAME = () => {
-                this.PlayAgainButton.classList.remove('play--again--hidden.');
+                this.PlayAgainForm.classList.remove('play--again--hidden');
                 StartGame();
                 clearInterval(this.IntervalId);
                 this.time = 20;
@@ -125,6 +125,16 @@
                 this.AppItem.insertAdjacentHTML("beforeend", this.ListFonts[this.ListFonts.length - 1]);
                 this.score = 0;
                 this.scoreDisplay.innerText = `Score:${this.Result}/${fonts.length}`;
+                this.PlayAgainButton.addEventListener('click', (e) => {
+                    this.round = 0;
+                    this.ListFonts = [];
+                    StartGame();
+                    SetVignette();
+                    this.PlayAgainForm.classList.add('play--again--hidden');
+
+                    return this.round;
+                })
+
             }
 
 
