@@ -17,6 +17,7 @@
             this.DatalistFonts = document.querySelector('#fonts');
             this.PlayAgainForm = document.querySelector('#play-again');
             this.PlayAgainButton = document.querySelector('.play__item--submit');
+            this.PlayForm = document.querySelector('#play');
             this.score = 0;
             this.time = 20;
             this.number;
@@ -117,6 +118,7 @@
             }
             const ENDGAME = () => {
                 this.PlayAgainForm.classList.remove('play--again--hidden');
+                this.PlayForm.classList.add('play--again--hidden');
                 StartGame();
                 clearInterval(this.IntervalId);
                 this.time = 20;
@@ -130,6 +132,7 @@
                     StartGame();
                     SetVignette();
                     this.PlayAgainForm.classList.add('play--again--hidden');
+                    this.PlayForm.classList.remove('play--again--hidden');
 
                     return this.round;
                 })
