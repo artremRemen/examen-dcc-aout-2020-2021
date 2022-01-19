@@ -104,6 +104,7 @@
                 return this.Result;
             }
 
+
             const SetVignette = () => {
                 this.AppItem.insertAdjacentHTML("beforeend", this.ListFonts[this.ListFonts.length - 1]);
                 this.IntervalId = setInterval(() => {
