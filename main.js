@@ -15,6 +15,7 @@
             this.Wrong = document.querySelector('.wrong-cards');
             this.bodyElement = document.querySelector('body');
             this.DatalistFonts = document.querySelector('#fonts');
+            this.PlayAgainButton = document.querySelector('#play-again');
             this.score = 0;
             this.time = 20;
             this.number;
@@ -24,6 +25,9 @@
             this.Result = 0;
             this.round = 0;
             this.ArrayIndex;
+            this.elementItem;
+
+
             /* Functions */
             const RandomNumber = () => {
                 this.number = parseInt(Math.random(0, 20) * 10 * 2);
@@ -61,6 +65,7 @@
             }
 
             const VerifResponse = () => {
+                clearInterval(this.IntervalId);
                 this.ArrayIndex = this.ListFonts.length - 1;
                 if (this.NameInput.value === fonts[this.ArrayIndex].name) {
                     this.Response++;
@@ -69,7 +74,6 @@
 
                     this.Response++;
                 }
-                this.Response = 2
                 if (this.Response === 1) {
                     this.Result = this.Result + 0.5;
                     AddClass('app__item--move', ' ', this.ArrayIndex);
@@ -80,31 +84,47 @@
                     this.Result = this.Result + 1;
                     AddClass('app__item--move', 'app__item--move--success', this.ArrayIndex);
                     this.ListFonts.pop();
-                } else {
+                }
+                if (this.Response === 0) {
                     AddClass('app__item--move', ' ', this.ArrayIndex);
                     this.Wrong.insertAdjacentHTML('beforeend', this.ListFonts[this.ArrayIndex]);
                     this.ListFonts.pop();
                 }
-                clearInterval(this.IntervalId);
+
                 this.scoreDisplay.innerText = `Score:${this.Result}/${fonts.length}`;
                 this.time = 20;
                 this.timeDisplay.innerText = `Temps restant pour cette carte:00:${this.time}`;
+                this.round++;
                 return this.Result;
             }
 
             const SetVignette = () => {
                 console.log(this.ListFonts.length - 1);
+                if (this.round !== 0) {
+                    this.elementItem = document.querySelector('.app__item');
+                    this.elementItem.remove()
+                }
                 this.AppItem.insertAdjacentHTML("beforeend", this.ListFonts[this.ListFonts.length - 1]);
-                this.AppItem.insertAdjacentHTML("beforeend", this.ListFonts[this.ListFonts.length - 2]);
-                this.AppItem.insertAdjacentHTML("beforeend", this.ListFonts[this.ListFonts.length - 3]);
-                this.IntervalId = setInterval((e) => {
+                this.IntervalId = setInterval(() => {
                     this.time--;
                     this.timeDisplay.innerText = `Temps restant pour cette carte:00:${this.time}`;
                     if (this.time === 0) {
                         clearInterval(this.IntervalId);
+                        VerifResponse();
+                        SetVignette();
                     }
-                    VerifResponse();
+
                 }, 1000);
+            }
+            const ENDGAME = () => {
+                this.PlayAgainButton.classList.remove('play--again--hidden.');
+                StartGame();
+                clearInterval(this.IntervalId);
+                this.time = 20;
+                this.timeDisplay.innerText = `Temps restant pour cette carte:00:${this.time}`;
+                this.AppItem.insertAdjacentHTML("beforeend", this.ListFonts[this.ListFonts.length - 1]);
+                this.score = 0;
+                this.scoreDisplay.innerText = `Score:${this.Result}/${fonts.length}`;
             }
 
 
@@ -118,20 +138,24 @@
             this.bodyElement.addEventListener('keypress', (e) => {
                 if (e.code === 'Enter') {
                     e.preventDefault();
-                    SetVignette();
-                    if (this.round > 20) {
-                        this.scoreDisplay.innerText = `Score:${this.Result}/${fonts.length}`;
+                    if (this.round < 19) {
+                        this.scoreDisplay.innerText = `Score:${this.Result}`;
+                        VerifResponse();
+                        SetVignette();
+                    } else {
+                        ENDGAME();
                     }
                 }
             })
             this.submitButton.addEventListener('click', (e) => {
                 e.preventDefault();
-                SetVignette();
-                if (this.round > 20) {
-                    this.scoreDisplay.innerText = `Score:${this.Result}`;
 
+                if (this.round < 19) {
+                    this.scoreDisplay.innerText = `Score:${this.Result}`;
+                    VerifResponse();
+                    SetVignette();
                 } else {
-                    console.log('EndGame');
+                    ENDGAME();
                 }
             })
         }
