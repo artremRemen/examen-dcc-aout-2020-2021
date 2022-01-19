@@ -1,33 +1,65 @@
 <!doctype html>
 <html lang="fr-BE">
+
 <head>
     <meta charset="utf-8">
-    <title>HEPL - DCC - Développement Côté Client | examen août 2020-2021</title>
+    <title>HEPL - DCC - Développement Côté Client | examen janvier 2022</title>
     <meta name="author" content="Daniel Schreurs">
     <meta name="description" content="Cours Développement Côté Client 2020-2021">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="apple-touch-icon" href="icon.png">
-    <link rel="stylesheet" href="dist/css/style.min.css">
+    <link rel="stylesheet" href="./src/sass/main.scss">
     <meta name="theme-color" content="#fafafa">
 </head>
 
-<body class="container">
-<!--[if IE]>
+<body class="">
+    <!--[if IE]>
 <p class="browserupgrade">Vous utilisez un navigateur <strong> obsolète </strong>. Veuillez <a
         href="https://browsehappy.com/"> mettre à niveau
     votre navigateur </a> pour améliorer votre expérience et votre sécurité.
 </p>
 <![endif]-->
 
-<h1 class="hidden">Chronomètre IOS</h1>
+    <h1 class="main-header">Tymper</h1>
+    <div class="container">
+        <div class="information box box--small">
+            <p class="information__score" data-text="Score&nbsp: "></p>
+            <p class="information__time" data-text="Temps restant pour cette carte&nbsp: "></p>
+        </div>
+        <form action="#" id="play-again" class="play box play--again box play--again--hidden" method="get">
+            <input class="play__item play__item--submit" type="submit" value="Recommencer">
+        </form>
+        <ul class="app">
+        </ul>
+        <form action="#" id="play" class="play box" method="get">
+            <label class="play__item" for="font">Le nom &nbsp;:</label>
+            <input type="text" class="play__item play__item--search" placeholder="Entrez le nom" list="fonts" id="font" name="font" />
+            <datalist id="fonts">
+        </datalist>
+            <label class="play__item" for="family">La famille &nbsp;:</label>
+            <input type="text" class="play__item play__item--search" placeholder="Entrez la famille" list="families" id="family" name="family" />
+            <datalist id="families">
+            <option value="Humanes">
+            <option value="Garaldes">
+            <option value="Réales">
+            <option value="Didones">
+            <option value="Mécanes">
+            <option value="Linéales">
+            <option value="Linéales de transition">
+            <option value="Linéales géométrique">
+            <option value="Manuaires">
+            <option value="Scriptes">
+            <option value="Fractures">
+            <option value="Autres">
+        </datalist>
+            <input class="play__item play__item--submit" type="submit" value="Valider">
+        </form>
+        <ul class="wrong-cards">
 
-<div class="app iphone-x">
-    <time class="app__timer" datetime="00:00:00">00:00:00</time>
-    <div class="app__controls">
-        <button class="app__controls__lap" data-alternate="Effacer">Tour</button>
-        <button class="app__controls__start" data-alternate="Stop">Démarrer</button>
+        </ul>
     </div>
-    <ul class="app__laps"></ul>
-</div>
+    <script src="./index.js"></script>
+    <script src="./main.js"></script>
 </body>
+
 </html>

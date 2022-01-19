@@ -1,75 +1,110 @@
-# Chronomètre IOS
+# Tymper ❤️
 
-> Examen DCC août 2020-2021
+> Examen DCC janvier 2022
 
-Dans le cadre de cet examen, nous vous demandons de reproduire  une version JavaScript du chronomètre disponible sous IOS.
 
-## Consignes pour l'examen
 
-1. Renommez le dossier qui porte le nom `examen-dcc-aout-2020-2021` en `examen-dcc-aout-2020-2021-nom-prenom-group`.
-1. Dans le cadre de cet examen de *Développement Côté Client* vous devez uniquement vous focaliser sur le fichier `index.js`, qui se trouve à la racine. Mis à part ajouter la balise `script`, on ne vous demande pas de modifier le code HTML ni le code CSS qui s'y rapporte.
-1. Cet examen dure maximum 4 heures.
+## Préambule
+
+1. Dans le cadre de cet examen de *Développement Côté Client* vous devez uniquement vous focaliser sur le fichier `main.js`, qui se trouve à la racine. Mis à part ajouter la balise `script`, on ne vous demande pas de modifier le code HTML ni le code CSS qui s'y rapporte;
+1. Cet examen dure maximum 4 heures;
+1. Vous êtes obligé d'enregistrer  l’entièreté de tous vos écrans ainsi qu'une caméra frontale de vous;
+1. Vous devez également produire des commits et pusher toutes les 30 minutes maximum;
+1. Bien sûr, votre présence sur Teams est requise.
 
 ## Identification des éléments d’interface
 
 Dans la capture d’écrans ci-dessous, vous pouvez voir l’application avec ses noms de classes, correspondant aux différents éléments que vous devez manipuler.
 
-![Les noms des classes des éléments HTML](./img/classNames.png)
+![class](./img/class.jpg)
+
+
 
 ## Les fonctionnalités
 
-### Démarrer le chronomètre
+### Démarrer le jeu
 
-![Démarrer le chronomètre](./img/start.gif)
+#### Produire les cartes
 
-Pour démarrer le chronomètre, il faut lancer une fonction qui s'exécutera toutes les 10 millisecondes au clic sur le bouton `.app__controls__start`. Cette fonction met à jour le temps écoulé, composé de *millisecondes*, *secondes* et *minutes*. Vous incrémentez, toutes les 10 millisecondes, l'unité des millisecondes. Quand on atteint 100 (soit 1000 millisecondes) il faut incrémenter les secondes d'une unité. Quand on atteint les 60 secondes, il faut incrémenter les minutes de 1. Nous ne considérons pas le cas où les minutes dépassent 99.
-
-Remarquez, tout de même, que vous devez préfixer les chiffres inférieurs à 10 d'un `0`. Ainsi 6 secondes s’écrivent `06`.
-
-![Ajouter des zéros pour les nombres inférieurs à 10](./img/seconds.png)
-
-### Enregistrer les tours
-
-![Enregistrer les tours](./img/lap.gif)
-
-Il s'agit simplement de recopier dans la liste `.app__laps` un nouvel item respectant le format suivant :
+La première étape consiste à produire par JavaScript l'ensemble des fiches à deviner. Pour ce faire, vous devez vous servir de la variable globale `fonts`. Celle-ci contient une collection d'objets représentant chacun une police de caractères différente. À partir du nom de la police, vous pouvez produire une fiche qui se matérialise par un item qu'il faut ajouter à la liste `.app`. 
 
 ```html
-<li class="app__lap">
- <span class="app__lap-count">Tour n</span>
- <time class="app__lap-value" datatype="XX:YY:ZZ">XX:YY:ZZ</time>
+<li data-font-name="nom" data-family="famille" class='app__item'>
+  <div class="app__item__info"><span class="app__item__info__name">nom</span>
+    <span class="app__item__info__info">famille - auteur</span>
+  </div>
+  <img class='app__item__font' src='./assets/fonts/nom.svg' alt='Aa, abcdefghijklmnopqrstuvwxyz, ABCDEFGHIJKLMNOPQRSTUVWXYZ'>
 </li>
 ```
-Le `n` représente le nombre de tours enregistré. `XX` représente les minutes, `YY` les secondes et `ZZ` les millisecondes.
 
-### Arrêter le chronomètre
+Vous devez mettre à jour :
 
-![Arrêter le chronomètre](./img/stop.gif)
-Dès que le chronomètre est lancé, le bouton `.app__controls__start` affiche `Stop`. Quand on clique sur ce bouton, le chronomètre s'arrête, sans rien effacer. Une fois le chronomètre arrêté, le bouton `.app__controls__start` affiche `Démarrer` et le bouton `.app__controls__lap` affiche `Effacer`.
+* `nom` par le nom de la police de caractères; (3 fois dans ce bloc)
+* `famille` par la famille de la police de caractères; (2 fois dans ce bloc)
+* `auteur` par l'auteur de la police de caractères; (1 fois dans ce bloc)
 
-### Relancer le chronomètre
+![image-20211227164037913](./img/generate.png)
 
-![Relancer le chronomètre](./img/restart.gif)
-Quand le chronomètre est arrêté, le bouton `.app__controls__start` affiche `Démarrer` qui permet de relancer le chronomètre. Le bouton des tours qui affiche `Effacer` affiche de nouveau `Tour` dès que le chronomètre est relancé. Le bouton `.app__controls__start` affiche  `Stop`.
+#### Enrichir le formulaire
 
-### Remettre à zéro le chronomètre
+Afin d'augmenter le confort d’utilisation, nous vous demandons de peupler la  `datalist#fonts` avec les valeurs possibles, à savoir les noms des polices de caractères. Vous devez vous servir de la même variable globale `fonts`.
 
-![Remettre à zéro le chronomètre](./img/reset.gif)
-Quand le chronomètre est arrêté, le bouton des tours affiche `Effacer` au clic cela supprime tous les *items* dans la liste `.app__laps` et remet le chronomètre à zéros. Le bouton `.app__controls__start` affiche `Démarrer` et le bouton `.app__controls__lap` affiche `Tour`.
 
-## Contraintes techniques
 
-1. Pour mettre à jour le temps écoulé, vous devez utiliser la fonction `setInterval()`. Voici le [lien](https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/setInterval) vers la documentation officielle. Vous devez donc conserver une référence vers l’`intervalID` pour pouvoir arrêter l’appel de la fonction. 
-1. Pour changer le texte des boutons, `.app__controls__start` et `.app__controls__lap` vous devez utiliser le contenu de l’attribut `data-alternate`.
-1. Vous devez suivre les bonnes pratiques utilisées dans le cadre du cours avec au moins un objet qui encapsulent les méthodes et propriétés dont vous avez besoin.
+![image-20211227164247939](./img/generate2.png)
 
-## Données
 
-1. Vous devez créer une classe `Timer` qui contient quatre propriétés `_milliSeconds`, `_seconds`, `_minutes` et `_lapCount` et encapsuler uniquement la gestion du temps ainsi que des tours dans cette la classe. 
-1. Vous devez créer un objet `StopWatch` qui contient la logique de votre chronomètre ainsi que les considérations liées à l'affichage.
 
-## Bonus 🥳
+#### Afficher les informations du jeu
 
-Pour ce bonus on vous demande de maintenir le scroll de liste `.app__laps` scrollé de sorte que les derniers éléments ajoutés à la fin de la liste restent visibles.
+Dans l’élément `p.information__score` vous devez récupérer la valeur de l'attribut `data-text` et le concaténer avec le nombre de bonnes cartes jouées sur le nombre total de cartes et en faire le contenu texte de l’élément. Ainsi au début du jeu vous obtenez ceci :
 
-![Maintenir le scroll de la liste des tours scrollé](./img/scroll.gif)
+```html
+<p class="information__score" data-text="Score&nbsp;: ">
+  Score&nbsp;:  <span>0/100</span>
+</p>
+```
+
+Ces nombres sont dynamiques. Le score évoluera au fil des coups joués par l’utilisateur, tandis que le total correspond au nombre d'objets disponibles dans la variable globale `fonts`.
+
+Dans l’élément, `p.information__time` vous devez récupérer la valeur de l'attribut `data-text` et le concaténer au temps restant. À savoir 10 secondes par cartes. Il s'agit d'un paramètre du jeu.
+
+Ainsi au début du jeu vous obtenez ceci :
+
+```html
+<p class="information__time" data-text="Temps restant pour cette carte&nbsp;: ">
+  Temps restant pour cette carte&nbsp;:  <time datetime="00:10">00:10</time>
+</p>
+```
+
+
+
+### Jouer
+
+Dès lors que l'utilisateur soumet les informations du formulaire `form#play`, vous devez 
+
+* Vérifier si le nom renseigné à partir du champ `input#font` ainsi que la famille renseignée à partir du champ `input#family` correspondent à la fiche que vous lui présentez, à savoir le dernier item de la liste `ul.app`.
+  * Si les deux informations sont exactes, vous attribuez un point;
+  * Si l'une des deux informations est exacte, vous attribuez un demi-point;
+  * Si les deux informations sont fausses, vous n'attribuez aucun point;
+* Si l’utilisateur renseigne correctement les deux informations, vous devez ajouter à la fiche en cours deux classes : `app__item--move` et  `app__item--move--success`. 
+* Dans tous les autres cas, vous devez ajouter les deux classes : `app__item--move` et `app__item--move--error`
+* L'ajout de ces classes provoque une transition CSS. Si l’utilisateur a soumis une mauvaise réponse, vous devez en plus _cloner_ la fiche courante dans la liste, `wrong-cards` mais uniquement quand la transition s’est terminée, et sans les 2 classes que vous venez d'ajouter.
+* Vous devez, en fonction du coup qui vient d'être joué, calculer le score et l’afficher.
+* Vous devez mettre en place un compteur à rebours qui s'enclenche automatiquement au chargement de la page. 
+  * Quand l'utilisateur soumet une réponse, le compteur doit être réinitialisé. 
+  *  Quand le compteur arrive à 0, la carte passe dans la liste des cartes non résolues avec sa transition. Comme si l’utilisateur avait mal répondu.
+* Quand l'utilisateur a joué la dernière fiche, alors il faut faire apparaitre le formulaire `form#play-again` en retirant sa classe `play--again--hidden`. 
+* Quand l'utilisateur soumet ce formulaire `form#play-again`, il faut régénérer le jeu et cacher le formulaire en ajoutant la classe `play--again--hidden`.
+
+Vous pouvez regarder [la vidéo readme.m4v](./readme.m4v) au besoin.
+
+https://user-images.githubusercontent.com/8074967/147498344-dd39e7c2-9d3f-4d0c-bac5-030f12022f29.mov
+
+## Améliorations 
+
+1. Avant de générer les fiches, mélangez-les. Il suffit de permuter chaque objet du tableau avec un autre élément déterminé à partir d'un indice aléatoire compris entre 0 et la taille du tableau -1.
+
+2. Éviter qu'on puisse soumettre le formulaire de réponse durant la transition CSS.
+
+   

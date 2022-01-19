@@ -1,3 +1,4 @@
+@use 'sass:math';
 /*------------------------------------*\
     VARS.SCSS
 \*------------------------------------*/
@@ -14,7 +15,7 @@ $base-font-family: 'Avenir Next', 'Raleway', 'Avenir', 'sans-serif';
 $english-quotes: false;
 $responsive-extra: true;
 $spacing-unit: 24px;
-$spacing-unit--small: 24px/2;
+$spacing-unit--small: math.div(24px, 2);
 
 /*------------------------------------*\
     $CUSTOM
@@ -26,16 +27,12 @@ $spacing-unit--small: 24px/2;
 main {
   overflow-x: hidden;
 }
-
-$brand-round: 0.3rem;
-$bcg: white;
-$grid_item: white;
-$light-grey: #d4d4d4;
-$red: #e74c3c;
-$yellow: #f1c40f;
-
-
-$main-color: #001144;
+$main-color: #183a37;
+$bg-body: #fdf0d5;
+$box-shadow: 0 0 9px 0 rgba(black, 0.28);
+$box-shadow--error: 0 0 9px 0 rgba(red, 0.28);
+$box-shadow--success: 0 0 9px 0 rgba(green, 0.28);
+$border-radius:  2rem;
 
 $browser-context: 16; // Default
 $base-font-size: $browser-context px;
